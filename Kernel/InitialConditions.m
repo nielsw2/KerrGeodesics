@@ -159,6 +159,12 @@ ToCanonicalOrbitParametrization[orbitspec__] :=
        a = orbitspec[[1]];
        {a,p,e,x} = {"a","p","e","x"}/.KerrGeoInit2pex[a,{Null,Null,Null,Null},{},orbitspec[[2,2]]];
         o = OrbitParametrization[<|"Type" -> "Bound", "a" -> a, "p" -> p, "e" -> e, "x" -> x|>],
+    {_,"ELQ"->{_,_,_},"OrbitType"->"Plunge"},
+        a = orbitspec[[1]];
+        o = OrbitParametrization[<|"Type"->{"Plunge","Generic"}, "a"->a, "E"->orbitspec[[2,2,1]],"L"->orbitspec[[2,2,2]],"Q"->orbitspec[[2,2,3]]|>],
+    {_,"rISSO"->_,"OrbitType"->"Plunge"},
+        a = orbitspec[[1]];
+        o = OrbitParametrization[<|"Type"->{"Plunge","rISSO"}, "a"->a, "rISSO"->orbitspec[[2,2]]|>],
     {_,"InitialPosition"->{_,_,_,_},"FourVelocity"->{_,_,_,_}},
         a = orbitspec[[1]];
         consts=Values@KerrGeodesics`InitialConditions`Private`KerrGeoInit2Constants[a,orbitspec[[2,2]],orbitspec[[3,2]]];

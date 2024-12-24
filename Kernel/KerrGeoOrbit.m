@@ -13,7 +13,8 @@ BeginPackage["KerrGeodesics`KerrGeoOrbit`",
 	 "KerrGeodesics`OrbitalFrequencies`",
 	 "KerrGeodesics`SpecialOrbits`",
 	 "KerrGeodesics`FourVelocity`",
-	 "KerrGeodesics`PrivateUtilities`"}];
+	 "KerrGeodesics`PrivateUtilities`",
+	 "KerrGeodesics`KerrGeoPlunge`"}];
 
 
 KerrGeoOrbit::usage = "KerrGeoOrbit[a,p,e,x] returns a KerrGeoOrbitFunction[..] which stores the orbital trajectory and parameters.";
@@ -1244,8 +1245,19 @@ Options[KerrGeoOrbit] = {"Parametrization" -> "Mino", "Method" -> "FastSpec", "I
 KerrGeoOrbit[args__]:=KerrGeoOrbit@@SplitOptions[Unevaluated[KerrGeoOrbit[args]]]
 
 
-KerrGeoOrbit[orbitspec_OrbitParametrization, initPhases:{_,_,_,_}:{0,0,0,0},opts:OptionsPattern[]]:=Module[{param, method,a,p,e,x},
+KerrGeoOrbit[orbitspec_OrbitParametrization, initPhases:{_,_,_,_}:{0,0,0,0},opts:OptionsPattern[]]:=Module[{type, param, method,a,p,e,x,En,L,Q,rISSO},
 (*FIXME: add stability check but make it possible to turn it off*)
+
+type="Type"/.orbitspec[[1]];
+If[type=={"Plunge","Generic"}, 
+{a,En,L,Q}=Values[KeyTake[orbitspec[[1]],{"a","E","L","Q"}]];
+Return[KerrGeodesics`KerrGeoPlunge`Private`KerrGeoPlunge[a,{En,L,Q}]]
+];
+
+If[type=={"Plunge","rISSO"}, 
+{a,rISSO}=Values[KeyTake[orbitspec[[1]],{"a","rISSO"}]];
+Return[KerrGeodesics`KerrGeoPlunge`Private`KerrGeoPlunge[a,"ISSORadialParam",rISSO]]
+];
 
 {a,p,e,x}=Values[KeyTake[orbitspec[[1]],{"a","p","e","x"}]];
 
